@@ -1,0 +1,224 @@
+﻿@page
+@{}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TV Shows TRP Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body style="background-color:darkolivegreen">
+    <div>
+        <!-- Main Area where data will display-->
+        <div class="container">
+            <div class="row">
+                <h1 style="text-align:center; font-family:Century; color:white;">TV Shows TRP Details</h1>
+            </div>
+            <div class="row">
+                <button class="btn btn-success" data-toggle="modal" data-target="#insertDetails">Insert Details</button>
+            </div>
+            <br />
+            <div class="row" id="TVShowSection"></div>
+        </div>
+    </div>
+    <!-- web form to insert the data-->
+    <div class="modal" tabindex="-1" role="dialog" id="insertDetails">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Insert New Record</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="TVShowName">TV Show Name</label>
+                            <input type="text" class="form-control" id="TVShowName" aria-describedby="TVShowNameHelp">
+                        </div>
+                        <div class="form-group">
+                            <label for="TVChannelName">TV Channel Name</label>
+                            <input type="text" class="form-control" id="TVChannelName" aria-describedby="TVChannelNameHelp">
+                        </div>
+                        <div class="form-group">
+                            <label for="ProducerName">Producer Name</label>
+                            <input type="text" class="form-control" id="ProducerName" aria-describedby="ProducerNameHelp">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ShowTRP">Show TRP</label>
+                            <input type="text" class="form-control" id="ShowTRP" aria-describedby="ShowTRPHelp">
+                        </div>
+                        <div class="form-group" id="result">
+                        </div>
+                        <button type="button" onclick="insert()" class="btn btn-danger">Insert</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- web form to update the data-->
+    <div class="modal" tabindex="-1" role="dialog" id="UpdateDetails">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Record</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="Edit_id" aria-describedby="Id_Help">
+                        </div>
+                        <div class="form-group">
+                            <label for="Edit_TVShowName">TV Show Name</label>
+                            <input type="text" class="form-control" id="Edit_TVShowName" aria-describedby="Edit_TVShowNameHelp">
+                        </div>
+                        <div class="form-group">
+                            <label for="Edit_TVChannelName">TV Channel Name</label>
+                            <input type="text" class="form-control" id="Edit_TVChannelName" aria-describedby="Edit_TVChannelNameHelp">
+                        </div>
+                        <div class="form-group">
+                            <label for="Edit_ProducerName">Producer Name</label>
+                            <input type="text" class="form-control" id="Edit_ProducerName" aria-describedby="Edit_ProducerNameHelp">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Edit_ShowTRP">Show TRP</label>
+                            <input type="text" class="form-control" id="Edit_ShowTRP" aria-describedby="Edit_ShowTRPHelp">
+                        </div>
+                        <div class="form-group" id="resultUpdate">
+                        </div>
+                        <button type="button" onclick="Update()" class="btn btn-danger">Update</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScript Files-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+        var uri = 'api/TVShow_TRP';
+        $(document).ready(function () {
+            // Gets all data
+            $.getJSON(uri).done(function (data) {
+                $("#Main_temp").tmpl(data).appendTo("#TVShowSection");
+            });
+        });
+        function TVShowData() {
+            $.getJSON(uri).done(function (data) {
+                $("#TVShowSection").text("");
+                $("#Main_temp").tmpl(data).appendTo("#TVShowSection");
+            });
+        }
+        //function to Insert Data
+        function insert() {
+            var _TVShowName = $('#TVShowName').val();
+            var _TVChannelName = $('#TVChannelName').val();
+            var _ProducerName = $('#ProducerName').val();
+            var _ShowTRP = $('#ShowTRP').val();
+
+            var TVShow_Object = {
+                show_Name: _TVShowName,
+                channel_Name: _TVChannelName,
+                producer_Name: _ProducerName ,
+                show_TRP: parseFloat(_ShowTRP)
+            };
+            $.ajax({
+                type: "POST",
+                url: uri,
+                data: JSON.stringify(TVShow_Object),
+                contentType: "application/json; charset=utf-8"
+            }).done(function (response) {
+                $("#result").html("Record inserted successfully");
+                TVShowData();
+            }).fail(function (jqXHR, textStatus) {
+                $("#result").html("Record is not inserted. There is an error");
+            });
+        }
+           //function to Update Data
+        function Update() {
+            var _TVShowName = $('#Edit_TVShowName').val();
+            var _TVChannelName = $('#Edit_TVChannelName').val();
+            var _ProducerName = $('#Edit_ProducerName').val();
+            var _ShowTRP = $('#Edit_ShowTRP').val();
+
+            var TVShowUpdate_Object = {
+                id: parseInt($('#Edit_id').val()),
+                show_Name: _TVShowName,
+                channel_Name: _TVChannelName,
+                producer_Name: _ProducerName ,
+                show_TRP: parseFloat(_ShowTRP)
+            };
+            $.ajax({
+                type: "PUT",
+                url: uri + "/" + $('#Edit_id').val(),
+                data: JSON.stringify(TVShowUpdate_Object),
+                contentType: "application/json; charset=utf-8"
+            }).done(function (response) {
+                $("#resultUpdate").html("Record updated successfully");
+                TVShowData();
+            }).fail(function (jqXHR, textStatus) {
+                $("#resultUpdate").html("Record is not inserted. There is an error");
+            });
+        }
+        // function to remove record
+        function remove(id) {
+            var yes = confirm("Do you really want to delete this account?");
+            if (yes) {
+                $.ajax({
+                    type: "DELETE",
+                    url: uri + "/" + id,
+                }).done(function (response) {
+                    TVShowData();
+                });
+            }
+        }
+        //function to display data in update form
+        function UpdateRecord(id) {
+            $.ajax({
+                type: "GET",
+                url: uri + "/" + id,
+                contentType: "application/json"
+            }).done(function (response) {
+                $('#Edit_id').val(response.id);
+                $('#Edit_TVShowName').val(response.show_Name);
+                $('#Edit_TVChannelName').val(response.channel_Name);
+                $('#Edit_ProducerName').val(response.producer_Name);
+                $('#Edit_ShowTRP').val(response.show_TRP);
+            });
+        }
+
+    </script>
+    <!--Template to display data-->
+    <script id="Main_temp" type="text/x-jquery-tmpl">
+        <div class="col-lg-4">
+            <div class="card border-secondary mb-3">
+                <img src="" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">TV Show Name: ${show_Name}</h5>
+                    <p class="card-text"><b>Hosting Channel:</b> ${channel_Name}</p>
+                    <p class="card-text"><b>Producer Name:</b> ${producer_Name}</p>
+                    <p class="card-text"><b>Show TRP Rating:</b> ${show_TRP} out of 10</p>
+                    <button class="btn btn-outline-danger" onclick="UpdateRecord('${id}')" data-toggle="modal" data-target="#UpdateDetails">Update</button>
+                    <a href="#" class="btn btn-outline-dark" onclick="remove('${id}')">Delete</a>
+                </div>
+            </div>
+        </div>
+    </script>
+</body>
+</html>
+
+
